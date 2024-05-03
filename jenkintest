@@ -1,52 +1,73 @@
+[19:54] SAMRUDDHI NITIN DHAVALE
 pipeline {
     agent any
-    
-    environment {
-        DIRECTORY_PATH = "/Users/kudzai"
-        TESTING_ENVIRONMENT = "TestingEnv"
-        PRODUCTION_ENVIRONMENT = "KudProdEnv"
-    }
     
     stages {
         stage('Build') {
             steps {
-                echo "Fetching the source code from the directory path specified by the environment variable: ${env.DIRECTORY_PATH}"
-                echo "Compiling the code and generating any necessary artifacts"
+                // Build the code using Maven
+                echo "Building the code using Maven"
             }
         }
         
-        stage('Test') {
+        stage('Unit and Integration Tests') {
             steps {
-                echo "Unit tests"
-                echo "Integration tests"
+                // Run unit tests using JUnit and integration tests using Selenium
+                echo "Running unit tests and integration tests"
             }
         }
         
-        stage('Code Quality Check') {
+        stage('Code Analysis') {
             steps {
-                echo "Checking the quality of the code"
+                // Integrate code analysis tool (SonarQube) to analyze the code
+                echo "Analyzing code using SonarQube"
             }
         }
         
-        stage('Deploy') {
+        stage('Security Scan') {
             steps {
-                echo "Deploying the application to a testing environment specified by the environment variable: ${env.TESTING_ENVIRONMENT}"
+                // Perform security scan using OWASP ZAP or SonarQube security scanner
+                echo "Performing security scan using OWASP ZAP"
             }
         }
         
-        stage('Approval') {
+        stage('Deploy to Staging') {
             steps {
-                script {
-                    echo "Waiting for manual approval..."
-                    sleep 10
-                }
+                // Deploy the application to a staging server (AWS EC2 instance)
+                echo "Deploying application to staging server (AWS EC2 instance)"
+            }
+        }
+        
+        stage('Integration Tests on Staging') {
+            steps {
+                // Run integration tests on the staging environment
+                echo "Running integration tests on staging environment"
             }
         }
         
         stage('Deploy to Production') {
             steps {
-                echo "Deploying the code to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
+                // Deploy the application to a production server (AWS EC2 instance)
+                echo "Deploying application to production server (AWS EC2 instance)"
             }
         }
     }
+    
+    post {
+        success {
+                mail to: "klshava97@gmail.com"
+                subject: "Pipeline Success",
+                body: "The pipeline has executed successfully.",
+                
+            
+        }
+        failure {
+            // Send email notification for failed pipeline execution
+            mail to: "klshava97@gmail.com"
+                subject: "Pipeline failed",
+                body: "The pipeline has executed unsuccessfully.",
+                
+        }
+    }
 }
+ 
